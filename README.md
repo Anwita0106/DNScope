@@ -15,6 +15,11 @@ Computer Networks · Assessment-8 · Anwita Padhi (24BYB0193) · VIT Vellore · 
 ![SQLite](https://img.shields.io/badge/SQLite-database-003B57?logo=sqlite&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-41%20passing-22C55E)
 
+**🌐 Live demo: <https://dnscope-kotw.onrender.com>**
+
+<sub>Hosted on Render's free plan: if it has been idle, the first visit takes about a minute to wake up.
+Try <code>spoof.dnscope.test</code> on the Response Comparison page.</sub>
+
 ![DNScope Response Comparison page](docs/screenshots/compare.png)
 
 </div>
