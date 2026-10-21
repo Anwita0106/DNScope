@@ -96,6 +96,23 @@ Open **<http://localhost:5173>**.
 
 Only the last line of each block is needed (after activating the environment in terminal 1).
 
+### Deploy online (free, on Render)
+
+The repository contains a `Dockerfile` and a `render.yaml`, so one service serves both the API and the
+dashboard at a single web address.
+
+1. Sign in at <https://render.com> with GitHub.
+2. Click **New +** → **Blueprint**, pick the **DNScope** repository, then **Apply**.
+3. Wait for the build (about 5 minutes), then open the `https://dnscope-xxxx.onrender.com` link Render shows.
+4. *(Optional)* For AI explanations: in the service's **Environment** tab, set `ANTHROPIC_API_KEY`.
+
+On the free plan the service sleeps after about 15 minutes without visitors (the first visit then takes
+about a minute), and the database is reset on every restart or redeploy. With `DNSCOPE_SEED_DEMO=1` it
+refills itself with the simulated demo data automatically.
+
+To test the same container locally (needs Docker):
+`docker build -t dnscope . && docker run -p 8000:8000 -e DNSCOPE_SEED_DEMO=1 dnscope` → <http://localhost:8000>
+
 <details>
 <summary><b>Troubleshooting</b></summary>
 
@@ -525,6 +542,8 @@ because the scenarios were designed with the rules in mind.
 ```
 dnscope/
 ├── README.md
+├── Dockerfile               builds dashboard + API into one container
+├── render.yaml              one-click Render deployment
 ├── backend/
 │   ├── requirements.txt
 │   ├── .env.example

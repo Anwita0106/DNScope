@@ -1,11 +1,15 @@
 """FastAPI application: REST endpoints used by the React dashboard."""
 from __future__ import annotations
 
+import logging
+import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from . import ai_assistant, repository as repo
@@ -14,9 +18,17 @@ from .resolver_service import SCENARIOS
 from .service import run_check
 from .validator import InvalidDomain, validate_domain
 
+log = logging.getLogger("dnscope")
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     repo.init_db()
+    # On a fresh deployment the database is empty; DNSCOPE_SEED_DEMO=1 fills it with SIMULATED demo data.
+    if os.environ.get("DNSCOPE_SEED_DEMO") == "1" and repo.overview(1)["total_checks"] == 0:
+        from .seed_demo import main as seed
+        log.info("Seeding simulated demo data")
+        seed()
     yield
 
 
@@ -138,3 +150,11 @@ def scenarios() -> dict:
     return {"zone": SIMULATED_ZONE, "warmup_checks": settings.warmup_checks,
             "items": [{"domain": f"{k}.{SIMULATED_ZONE}", "description": v} for k, v in SCENARIOS.items()],
             "record_types": SUPPORTED_RECORD_TYPES}
+
+
+# ---------------------------------------------------------------------------
+# Serve the built React dashboard from the same server (used for deployment).
+# Locally you normally run the Vite dev server instead, so this is skipped when no build exists.
+_STATIC = Path(os.environ.get("DNSCOPE_STATIC_DIR", Path(__file__).resolve().parents[2] / "frontend" / "dist"))
+if (_STATIC / "index.html").exists():
+    app.mount("/", StaticFiles(directory=_STATIC, html=True), name="dashboard")
