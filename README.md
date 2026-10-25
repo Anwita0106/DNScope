@@ -6,7 +6,7 @@
 
 **Observe. Compare. Investigate.**
 
-Computer Networks · Assessment-8 · Anwita Padhi (24BYB0193) · VIT Vellore · 2026–2027
+Computer Networks · Anwita Padhi (24BYB0193) · VIT Vellore · 2026–2027
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&logoColor=white)
